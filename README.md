@@ -1,4 +1,4 @@
-scaffold-grunt-0.4.0
+sim-graph
 ====================
 
-javascript project scaffold configured with grunt 0.4.0
+javascript app that teaches graph algorithms
