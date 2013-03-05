@@ -1,0 +1,17 @@
+{
+    "name" : "ria-boilerplate",
+    "version" : "0.0.1",
+    "main" : "",
+    "dependencies" : {
+        "jquery": "git://github.com/components/jquery.git",
+        "backbone": "git://github.com/documentcloud/backbone.git",
+        "mocha": "git://github.com/visionmedia/mocha.git",
+        "expect": "git://github.com/LearnBoost/expect.js.git",
+        "require": "git://github.com/jrburke/requirejs",
+        "sinon": "git://github.com/blittle/sinon.js.git",
+        "underscore": "git://github.com/documentcloud/underscore.git",
+        "requirejs-text": "git://github.com/requirejs/text",
+        "bootstrap": "git://github.com/twitter/bootstrap.git",
+        "less-elements": "git://github.com/dmitryf/elements.git"
+    }
+}
