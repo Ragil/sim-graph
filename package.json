@@ -1,5 +1,5 @@
 {
-  "name" : "scaffold-grunt-0.4.0",
+  "name" : "sim-graph",
   "version" : "0.0.1",
   "dependencies" : {
     "grunt" : "0.4.0",
