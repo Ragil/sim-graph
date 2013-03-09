@@ -24,12 +24,16 @@
                     mocha.setup({
                         ui : 'bdd',
                         // ignore jquery global leak
-                        globals : [ 'jQuery*' ]
+                        globals : [ 'jQuery*', 'check' ]
                     });
                     require([ 'test/spec/test',
                         'coverage/JSCovReporter.js', 'coverage/reporter.js' ],
                             runMocha);
                 </script>
+    <div id="title">
+      <span>Normal Report - </span>
+      <a href="index-cov.html">Switch to Code Coverage</a>
+    </div>
     <div id="menu"></div>
     <div id="mocha"></div>
     <div id="coverage"></div>
