@@ -15,13 +15,13 @@ require.config({
         mocha : '../../components/mocha/mocha',
         expect : '../../components/expect/expect',
         sinon : '../../components/sinon/sinon',
+        check : '../../components/checkjs/lib/check',
 
         // environment settings
         env : 'env/local',
 
         // frequently used components
-        eventBus : 'util/eventBus',
-        check : 'util/check'
+        eventBus : 'util/eventBus'
 
     },
 

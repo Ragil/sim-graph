@@ -9,10 +9,6 @@ define(function(require) {
     var MainView = require('view/MainView');
 
     var TestView = Backbone.View.extend({
-        initialize : function(options) {
-            check(options).isObject();
-        },
-
         remove : function() {
             this.$el.remove();
         }

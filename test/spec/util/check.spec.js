@@ -330,6 +330,21 @@ define(function(require) {
 
         });
 
+        describe('each', function() {
+
+            it('should verify each array element', function() {
+                expect(check([true, true]).each().isBoolean()).to.be(true);
+            });
+
+            it('should return false when elements are different', function() {
+                expect(check([true, 1]).each().isNumber()).to.be(false);
+            });
+
+            it('should return false when not an array', function() {
+                expect(check({val : true}).each().isBoolean()).to.be(false);
+            });
+
+        });
     });
 
 });
