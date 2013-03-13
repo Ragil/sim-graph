@@ -16,6 +16,8 @@ require.config({
         expect : '../../components/expect/expect',
         sinon : '../../components/sinon/sinon',
         check : '../../components/checkjs/lib/check',
+        d3 : '../../components/d3/d3',
+        'jquery.svg' : '../../components/jquery.svg/jquery.svg',
 
         // environment settings
         env : 'env/local',
@@ -32,6 +34,9 @@ require.config({
         },
         underscore : {
             exports : '_'
+        },
+        d3 : {
+            exports : 'd3'
         },
         mocha : {
             exports : 'mocha'

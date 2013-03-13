@@ -10,15 +10,8 @@ define(function(require) {
 
   var Graph = Backbone.Model.extend({
     defaults : {
-      nodes : new Nodes(),
-      edges : new Edges(),
-      invalidEdges : [],
-      validEdges : [],
-      edgeList : {}, // forward edges
-      redgeList : {}, // reverse edges
-      rootNodes : [], // a list of nodes without incoming edges
       directed : true,
-      tree : false,
+      tree : true,
       width : 600, // width of the canvas
       height : 600 // height of the canvas
     },
@@ -26,12 +19,21 @@ define(function(require) {
       check(options.nodes).isOfType(Nodes);
       check(options.edges).isOfType(Edges);
 
+      this.set({
+        invalidEdges : [],
+        validEdges : [],
+        edgeList : {}, // forward edges
+        redgeList : {}, // reverse edges
+        rootNodes : [] // a list of nodes without incoming edges
+      });
+
       this.set('invalidEdges', this.findInvalidEdges());
       this.set('validEdges', this.findValidEdges());
       this.generateEdgeList();
       this.set('rootNodes', this.findRootNodes());
 
-      this.on('change:tree', this.computeTreePos, this);
+      this.on('change:tree', this.computeGraphPos, this);
+      this.computeGraphPos();
     },
 
     // finds all edges that have known nodes as their src/dest
@@ -213,6 +215,13 @@ define(function(require) {
 
         marginLeft = marginLeft + svgTreeWidth;
       }, this));
+    },
+
+    // reposition nodes based on the type of graph that we expect
+    computeGraphPos : function() {
+      if (this.get('tree')) {
+        this.computeGraphPosAsTree();
+      }
     }
   });
 

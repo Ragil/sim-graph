@@ -13,6 +13,7 @@
         "requirejs-text": "git://github.com/requirejs/text",
         "bootstrap": "git://github.com/twitter/bootstrap.git",
         "less-elements": "git://github.com/dmitryf/elements.git",
-        "checkjs" : "git://github.com/Ragil/checkjs"
+        "checkjs" : "git://github.com/Ragil/checkjs",
+        "d3" : "git://github.com/mbostock/d3.git"
     }
 }

@@ -81,7 +81,7 @@ module.exports = function(grunt) {
     watch : {
       code : {
         files : ['app/**', 'test/**'],
-        tasks : 'compile'
+        tasks : 'dist:local'
       }
     },
 
@@ -92,6 +92,7 @@ module.exports = function(grunt) {
           include : 'config.js',
           baseUrl : 'temp/app/',
           mainConfigFile : 'temp/app/config.js',
+          insertRequire : ['main'],
           out : 'dist/local/js/app.js',
           optimize : 'none'
         },
@@ -106,6 +107,7 @@ module.exports = function(grunt) {
           include : 'config.js',
           baseUrl : 'temp/app/',
           mainConfigFile : 'temp/app/config.js',
+          insertRequire : ['main'],
           out : 'dist/prod/js/app' + hash + '.js'
         },
         path : {
