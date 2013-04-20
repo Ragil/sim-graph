@@ -44,9 +44,21 @@ define(function(require) {
       return new Edge({ src : src, dest : dest });
     };
 
-    xdescribe('render', function() {
-      it('should render itself as an svg', function() {
-        expect(view.$el).to.be('');
+    describe('render', function() {
+      beforeEach(function() {
+        view.render();
+      });
+
+      it('should draw each node', function() {
+        expect(view.$('#a').attr('class').indexOf('node')).to.not.be(-1);
+        expect(view.$('#b').attr('class').indexOf('node')).to.not.be(-1);
+        expect(view.$('#c').attr('class').indexOf('node')).to.not.be(-1);
+      });
+
+      it('should draw each edge', function() {
+        expect(view.$('.edge').length).to.be(2);
+        expect($(view.$('.edge')[0]).attr('id')).to.be('a->b');
+        expect($(view.$('.edge')[1]).attr('id')).to.be('b->c');
       });
     });
 

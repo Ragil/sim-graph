@@ -8,6 +8,12 @@ define(function(require) {
     initialize : function(options) {
       check(options.id).isString();
     }
+  }, {
+    STATE : {
+      VISITED : 1,
+      PENDING : 2,
+      PROCESSING : 3
+    }
   });
 
   return Node;

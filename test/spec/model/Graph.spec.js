@@ -132,9 +132,12 @@ define(function(require) {
       it('should find all root nodes', function() {
         var rootNodes = graph.get('rootNodes');
         expect(rootNodes.length).to.be(3);
-        expect(_.indexOf(rootNodes, rootA)).not.to.be(-1);
-        expect(_.indexOf(rootNodes, root1)).not.to.be(-1);
-        expect(_.indexOf(rootNodes, root_)).not.to.be(-1);
+        expect(rootNodes.indexOf(rootA)).not.to.be(-1);
+        expect(rootNodes.indexOf(root1)).not.to.be(-1);
+        expect(rootNodes.indexOf(root_)).not.to.be(-1);
+        rootNodes.each(function(node) {
+          expect(node.get('isRoot')).to.be(true);
+        });
       });
     });
 
@@ -270,7 +273,98 @@ define(function(require) {
         expectFloat(node2.get('left'), 550);
       });
     });
+  });
 
+  describe('Graph', function() {
+    var graph = null;
+    var nodes = null;
+    var root_, node1, node2, node3, node4, node5, node6;
+    var validEdges = null;
+
+    beforeEach(function() {
+      // nodes
+      root_ = buildNode('_');
+      node1 = buildNode('A');
+      node2 = buildNode('B');
+      node3 = buildNode('C');
+      node4 = buildNode('1');
+      node5 = buildNode('2');
+      node6 = buildNode('3');
+
+      // collection
+      nodes = new Nodes([root_, node1, node2, node3, node4, node5, node6]);
+
+      // edges
+      validEdges = [
+        buildEdge(root_, node1),
+        buildEdge(root_, node2),
+        buildEdge(root_, node3),
+        buildEdge(root_, node4),
+        buildEdge(root_, node5),
+        buildEdge(root_, node6)
+      ];
+
+      graph = new Graph({
+        width : 600,
+        height : 600,
+        nodes : nodes,
+        edges : new Edges(validEdges)
+      });
+    });
+
+    var buildNode = function(id) {
+      return new Node({ id : id });
+    };
+    var buildEdge = function(src, dest) {
+      return new Edge({ src : src, dest : dest });
+    };
+
+    describe('computeGraphPosAsTree', function() {
+      it('should set all node radius to 40', function() {
+        graph.get('nodes').each(function(node) {
+          expect(node.get('radius')).to.be(40);
+        });
+      });
+    });
+  });
+
+  describe('Graph.randomTree', function() {
+    var graph = null;
+    var numNodes = 50;
+
+    beforeEach(function() {
+      graph = Graph.randomTree(numNodes);
+    });
+
+    it('should only generate 1 root node', function() {
+      expect(graph.get('rootNodes').length).to.be(1);
+    });
+
+    it('should generate edges for children in the tree', function() {
+      expect(graph.get('validEdges').length).to.be(numNodes - 1);
+    });
+
+    it('every node should be accessible from the root', function() {
+      var parents = graph.get('rootNodes').models;
+      var visited = 0;
+      while (parents.length !== 0) {
+        var children = [];
+        visited += parents.length;
+
+        _.each(parents, function(node) {
+          // find all children accessible from this node
+          graph.get('validEdges').each(function(edge) {
+            if (edge.get('src').id === node.id) {
+              children.push(edge.get('dest'));
+            }
+          });
+        });
+
+        parents = children;
+      }
+
+      expect(visited).to.be(numNodes);
+    });
   });
 
 });

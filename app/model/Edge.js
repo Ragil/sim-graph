@@ -9,7 +9,7 @@ define(function(require) {
       check(options.src).isOfType(Node);
       check(options.dest).isOfType(Node);
 
-      this.id = options.src.get('id') + '->' + options.dest.get('id');
+      this.id = options.src.id + '->' + options.dest.id;
     }
   });
 

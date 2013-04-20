@@ -12,8 +12,8 @@ define(function(require) {
     defaults : {
       directed : true,
       tree : true,
-      width : 600, // width of the canvas
-      height : 600 // height of the canvas
+      width : 500, // width of the canvas
+      height : 500 // height of the canvas
     },
     initialize : function(options) {
       check(options.nodes).isOfType(Nodes);
@@ -81,11 +81,12 @@ define(function(require) {
     findRootNodes : function() {
       var nodes = this.get('nodes');
       var redgeList = this.get('redgeList');
-      var rootNodes = [];
+      var rootNodes = new Nodes();
 
       nodes.each(function(node) {
         if (redgeList[node.id].length === 0) {
-          rootNodes.push(node);
+          node.set('isRoot', true);
+          rootNodes.add(node);
         }
       });
       return rootNodes;
@@ -109,7 +110,7 @@ define(function(require) {
     },
 
     // performs a bfs and returns a map for each node that is visited
-    // as (key : keyFn({ node, dist }), value : valFn({ node, dist }))
+    // as (key : keyFn({ node, dist }), value : valFn({ node, dist, prev }))
     bfs : function(root, keyFn, valFn) {
       var output = {};
       var queue = [];
@@ -193,16 +194,16 @@ define(function(require) {
       var svgHeight = this.get('height');
 
       // compute the dimensions
-      _.each(rootNodes, _.bind(function(node) {
+      rootNodes.each(function(node) {
         var dimension = this.getTreeDimension(node);
         totalWidth = totalWidth + dimension.width;
         maxHeight = _.max([maxHeight, dimension.height]);
         dimensions[node.id] = dimension;
-      }, this));
+      }, this);
 
       // assign max width for each node
       var marginLeft = 0;
-      _.each(rootNodes, _.bind(function(node, index) {
+      rootNodes.each(function(node, index) {
         var svgTreeWidth = svgWidth * (dimensions[node.id].width / totalWidth);
         var svgTreeHeight = svgHeight *
             (dimensions[node.id].height / maxHeight);
@@ -214,7 +215,7 @@ define(function(require) {
         });
 
         marginLeft = marginLeft + svgTreeWidth;
-      }, this));
+      }, this);
     },
 
     // reposition nodes based on the type of graph that we expect
@@ -222,6 +223,60 @@ define(function(require) {
       if (this.get('tree')) {
         this.computeGraphPosAsTree();
       }
+    }
+  }, {
+    randomTree : function(numNodes) {
+      check(numNodes).isNumber();
+
+      var nodes = new Nodes();
+      var edges = new Edges();
+
+      // generate nodes
+      for (var i = 0; i < numNodes; i++) {
+        nodes.add(new Node({ id : i.toString() }));
+      }
+
+      // select the first node as the root
+      var parents = [nodes.at(0)];
+      var selected = {};
+      var prob = 0.1;
+
+      // continually enumerate until a tree is generated
+      while (_.keys(selected).length < numNodes) {
+        _.each(parents, function(node) {
+          selected[node.id] = true;
+        });
+
+        // find nodes for the children
+        var children = [];
+        while (children.length === 0) {
+          nodes.each(function(node) {
+            if (!selected[node.id] && prob >= Math.random()) {
+              children.push(node);
+              selected[node.id] = true;
+            }
+          });
+          prob *= 2;
+        }
+
+        // attach edges between parent and children nodes
+        var attached = {};
+        while (_.keys(attached).length < children.length) {
+          _.each(parents, function(parent) {
+            _.each(children, function(child) {
+              if (!attached[child.id] && 1 / parents.length >= Math.random()) {
+                edges.add(new Edge({ src : parent, dest : child }));
+                attached[child.id] = true;
+              }
+            });
+          });
+        }
+
+        parents = children;
+      }
+
+      // generate the graph model
+      return new Graph({ nodes : nodes, edges : edges });
     }
   });
 

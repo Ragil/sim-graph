@@ -1,2 +1,32 @@
 @import "elements.less";
 @import "bootstrap.less";
+
+@color-neutral : black;
+@color-pending : yellow;
+@color-visited : green;
+@color-processing : blue;
+
+.graphView {
+  .edge {
+    stroke : @color-neutral;
+
+    &.visited {
+      stroke : @color-visited;
+    }
+  }
+  .node {
+    fill : none;
+    stroke : @color-neutral;
+    stroke-width : 2px;
+
+    &.pending {
+      fill : @color-pending;
+    }
+    &.processing {
+      fill : @color-processing;
+    }
+    &.visited {
+      fill : @color-visited;
+    }
+  }
+}

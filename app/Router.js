@@ -22,10 +22,7 @@ define(function(require) {
 
     all : function() {
       var view = new GraphView({
-        model : new Graph({
-          nodes : new Nodes([new Node({ id : 'a' }), new Node({ id : 'b' })]),
-          edges : new Edges()
-        })
+        model : Graph.randomTree(10)
       });
       this.mainView.setLayout(view);
       view.render();

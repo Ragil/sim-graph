@@ -21,10 +21,23 @@ define(function(require) {
 
     render : function() {
       this.node
+        .classed('node', true)
+        .attr('id', this.model.id)
         .attr('cx', this.model.get('left'))
         .attr('cy', this.model.get('top'))
-        .attr('r', this.model.get('radius'))
-        .attr('fill', 'red');
+        .attr('r', this.model.get('radius'));
+
+      switch(this.model.get('state')) {
+        case Node.STATE.PENDING :
+          this.node.classed('pending', true);
+          break;
+        case Node.STATE.PROCESSING :
+          this.node.classed('processing', true);
+          break;
+        case Node.STATE.VISITED :
+          this.node.classed('visited', true);
+          break;
+      }
     }
   });
 
