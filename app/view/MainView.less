@@ -6,6 +6,34 @@
 @color-visited : green;
 @color-processing : blue;
 
+@max-width : 750px;
+@max-height : 600px;
+
+.bfsView {
+  @log-width : 150px;
+
+  .log {
+    @border-width : 1px;
+
+    width : @log-width - @border-width;
+    height : @max-height;
+    border-right : 1px dashed black;
+    display : inline-block;
+    overflow-y : auto;
+    vertical-align : top;
+
+    .bfsOperationView {
+      border-bottom : 1px dashed black;
+    }
+  }
+  .graph {
+    // must sync this value with graph model
+    width : @max-width - @log-width;
+    height : @max-height;
+    display : inline-block;
+  }
+}
+
 .graphView {
   .edge {
     stroke : @color-neutral;

@@ -5,7 +5,7 @@ define(function(require) {
 
   var MainView  = require('view/MainView');
   var Backbone  = require('backbone');
-  var GraphView = require('view/graph/GraphView');
+  var BFSView   = require('view/algo/BFSView');
   var Graph     = require('model/Graph');
   var Nodes     = require('model/Nodes');
   var Node      = require('model/Node');
@@ -21,7 +21,7 @@ define(function(require) {
     },
 
     all : function() {
-      var view = new GraphView({
+      var view = new BFSView({
         model : Graph.randomTree(10)
       });
       this.mainView.setLayout(view);

@@ -5,7 +5,6 @@ define(function(require) {
   var Graph     = require('model/Graph');
   var NodeView  = require('./NodeView');
   var EdgeView  = require('./EdgeView');
-  var BFSView   = require('view/algo/BFSView');
   var d3        = require('d3');
 
   /**
@@ -26,7 +25,6 @@ define(function(require) {
       this.model.get('edges').on('reset add remove', this.render, this);
       this.model.on('change:width change:height', this.render, this);
 
-      new BFSView({ model : this.model });
       this.render();
     },
 
@@ -58,6 +56,10 @@ define(function(require) {
           new NodeView({ model : node, svg : this.svg });
         }
       }, this));
+    }
+  }, {
+    get : function(graph) {
+      return new GraphView({ model : graph });
     }
   });
 

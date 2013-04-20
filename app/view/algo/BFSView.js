@@ -5,68 +5,70 @@ define(function(require) {
   var Backbone  = require('backbone');
   var Graph     = require('model/Graph');
   var Node      = require('model/Node');
+  var GraphView = require('view/graph/GraphView');
+  var template  = require('text!./BFSView.html');
+  var BFSOperation = require('model/BFSOperation');
+  var BFSOperationView = require('./BFSOperationView');
 
-  var BFSOperation = Backbone.Model.extend({
-    initialize : function(options) {
-      // clone everything
-      this.set({
-        queue : _.map(options.queue, function(val) { return val; }),
-        operand : options.operand,
-        action : options.action || function() {},
-        raction : options.raction || function() {}
-      });
-
-      this.set({
-        action : _.bind(this.get('action'), this),
-        raction : _.bind(this.get('raction'), this)
-      });
-    },
-
-    exec : function() {
-      this.get('action')(this.get('operand'));
-    },
-    undo : function() {
-      this.get('raction')(this.get('operand'));
-    }
-  }, {
-    nodeOperation : function(queue, node, state) {
-      var op = new BFSOperation({
-        queue : queue,
-        operand : node,
-        action : function(operand) {
-          this.set('prevState', operand.get('state'));
-          operand.set('state', state);
-        },
-        raction : function(operand) {
-          operand.set('state', this.get('prevState'));
-        }
-      });
-      return op;
-    }
-  });
+  var STATE = {
+    PLAY : 1,
+    STOP : 2
+  };
 
   var BFSView = Backbone.View.extend({
+    className : 'bfsView',
     model : Graph,
     initialize : function(options) {
       check(options.model).isOfType(Graph);
 
+      options.model.set('width', 600);
+      options.model.set('height', 600);
+      options.model.computeGraphPos();
+
+      this.$el.html(template);
+      this.$graph = this.$('.graph');
+      this.$log = this.$('.log');
+      this.$graph.append(new GraphView({ model : options.model }).$el);
+
+      this.locks = {};
       this.model.on('change', this.render, this);
       this.render();
     },
 
     render : function() {
+      // stop all plays
+      _.each(this.locks, function(state, lock) {
+        this.locks[lock] = STATE.STOP;
+      }, this);
+
+      this.play();
+    },
+
+    play : function() {
+      // aquire lock
+      var lock = Math.random().toString();
+      this.locks[lock] = STATE.PLAY;
+
       var sequence = this.getExecSequence();
       var count = 0;
-      var next = function() {
-        sequence[count].exec();
-        count++;
+      var next = _.bind(function() {
+        var state = this.locks[lock];
 
-        if (count < sequence.length) {
-          setTimeout(next, 500);
+        if (state === STATE.PLAY) {
+          var operation = sequence[count++];
+          operation.exec();
+          this.$log.append(new BFSOperationView({ model : operation }).$el);
+
+          if (count < sequence.length) {
+            setTimeout(next, 500);
+          }
+        } else if (state === STATE.STOP) {
+          // clean up
+          delete this.locks[lock];
         }
-      };
+      }, this);
 
-      next();
+      setTimeout(next, 500);
     },
 
     getExecSequence : function() {
