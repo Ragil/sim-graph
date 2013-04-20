@@ -1,5 +1,9 @@
 define(function(require) {
 
+  require('sinon');
+  require('sinon/spy');
+  require('sinon/stub');
+
   require('test/spec/model/Graph.spec');
   require('test/spec/view/MainView.spec');
   require('test/spec/view/graph/GraphView.spec');

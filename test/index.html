@@ -18,17 +18,17 @@
     <!-- Common config -->
     <script src="../app/config.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
-                    require.config({
-                        baseUrl : '../temp/app/'
-                    })
-                    mocha.setup({
-                        ui : 'bdd',
-                        // ignore jquery global leak
-                        globals : [ 'jQuery*', 'check' ]
-                    });
-                    require([ 'test/spec/test',
-                        'coverage/JSCovReporter.js', 'coverage/reporter.js' ],
-                            runMocha);
+        require.config({
+            baseUrl : '../temp/app/'
+        })
+        mocha.setup({
+            ui : 'bdd',
+            // ignore jquery global leak
+            globals : [ 'jQuery*', 'check' ]
+        });
+        require([ 'test/spec/test',
+            'coverage/JSCovReporter.js', 'coverage/reporter.js' ],
+                runMocha);
                 </script>
     <div id="title">
       <span>Normal Report - </span>
