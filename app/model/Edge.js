@@ -11,6 +11,11 @@ define(function(require) {
 
       this.id = options.src.id + '->' + options.dest.id;
     }
+  }, {
+    STATE : {
+      TRAVERSING : 1,
+      TRAVERSED : 2
+    }
   });
 
   return Edge;

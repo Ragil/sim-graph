@@ -13,9 +13,9 @@
         .each(function(val, key) { return !isNaN(parseInt(key, 10)); })
         .isOfType(SVGSVGElement);
 
-      options.svg.append("svg:defs")
+      this.arrowHead = options.svg.append("svg:defs")
         .append("svg:marker")
-        .attr("id", "arrow")
+        .attr("id", "arrow" + this.model.id)
         .attr("viewBox", "0 0 10 10")
         .attr("refX", 10)
         .attr("refY", 5)
@@ -33,6 +33,10 @@
     },
 
     render : function() {
+      // reset css
+      this.line.attr('class', '');
+      this.arrowHead.attr('class', 'arrowHead');
+
       var src = this.model.get('src');
       var dest = this.model.get('dest');
 
@@ -56,13 +60,24 @@
 
       this.line
         .attr('id', this.model.id)
-        .attr('class', 'edge')
+        .classed('edge', true)
         .attr('x1', x1Pos)
         .attr('y1', y1Pos)
         .attr('x2', x2Pos)
         .attr('y2', y2Pos)
         .attr('stroke-width', 2)
-        .attr('marker-end', 'url(#arrow)');
+        .attr('marker-end', 'url(#arrow' + this.model.id + ')');
+
+      switch(this.model.get('state')) {
+        case Edge.STATE.TRAVERSING :
+          this.line.classed('traversing', true);
+          this.arrowHead.classed('traversing', true);
+          break;
+        case Edge.STATE.TRAVERSED :
+          this.line.classed('traversed', true);
+          this.arrowHead.classed('traversed', true);
+          break;
+      }
     }
   });
 

@@ -40,6 +40,13 @@ define(function(require) {
       return new Edge({src : src, dest : dest});
     };
 
+    describe('generateOperations', function() {
+      it('should convert the results from getExecSequence ' +
+          'operation', function() {
+        expect(view.generateOperations().length).to.be(19);
+      });
+    });
+
     describe('getExecSequence', function() {
       var sequence = null;
       beforeEach(function() {
@@ -57,8 +64,18 @@ define(function(require) {
         expect(operation.get('prevState')).to.be(prevState);
       };
 
+      var verifyEdgeOperation = function(operation, expected) {
+        expect(operation.get('operand').id).to.be(expected.id);
+
+        var prevState = operation.get('operand').get('state');
+        operation.exec();
+        expect(operation.get('operand').get('state')).to.be(expected.state);
+        operation.undo();
+        expect(operation.get('prevState')).to.be(prevState);
+      };
+
       it('it should generate the correct sequence', function() {
-        expect(sequence.length).to.be(13);
+        expect(sequence.length).to.be(19);
         // start of bfs
         expect(sequence.shift().get('queue')).to.eql([]);
 
@@ -71,10 +88,19 @@ define(function(require) {
             id : root.id, state : Node.STATE.PROCESSING });
 
         // add nodes at height 1
+        verifyEdgeOperation(sequence.shift(), { id : edges.at(0).id,
+            state : Edge.STATE.TRAVERSING });
         verifyNodeOperation(sequence.shift(), { queue : [ n1.id ],
             id : n1.id, state : Node.STATE.PENDING });
+        verifyEdgeOperation(sequence.shift(), { id : edges.at(0).id,
+            state : Edge.STATE.TRAVERSED });
+
+        verifyEdgeOperation(sequence.shift(), { id : edges.at(1).id,
+            state : Edge.STATE.TRAVERSING });
         verifyNodeOperation(sequence.shift(), { queue : [ n1.id, n2.id ],
             id : n2.id, state : Node.STATE.PENDING });
+        verifyEdgeOperation(sequence.shift(), { id : edges.at(1).id,
+            state : Edge.STATE.TRAVERSED });
 
         // visited root node
         verifyNodeOperation(sequence.shift(), { queue : [ n1.id, n2.id],
@@ -93,8 +119,12 @@ define(function(require) {
             id : n2.id, state : Node.STATE.PROCESSING });
 
         // add nodes at height 2
+        verifyEdgeOperation(sequence.shift(), { id : edges.at(2).id,
+            state : Edge.STATE.TRAVERSING });
         verifyNodeOperation(sequence.shift(), { queue : [ n3.id ],
             id : n3.id, state : Node.STATE.PENDING });
+        verifyEdgeOperation(sequence.shift(), { id : edges.at(2).id,
+            state : Edge.STATE.TRAVERSED });
 
         // visited n2
         verifyNodeOperation(sequence.shift(), { queue : [ n3.id ],

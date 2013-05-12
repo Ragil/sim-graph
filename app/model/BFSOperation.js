@@ -45,6 +45,23 @@ define(function(require) {
         }
       });
       return op;
+    },
+
+    edgeOperation : function(queue, edge, state) {
+      var op = new BFSOperation({
+        type : BFSOperation.TYPE.EDGE,
+        queue : queue,
+        operand : edge,
+        state : state,
+        action : function(operand) {
+          this.set('prevState', operand.get('state'));
+          operand.set('state', state);
+        },
+        raction : function(operand) {
+          operand.set('state', this.get('prevState'));
+        }
+      });
+      return op;
     }
   });
 

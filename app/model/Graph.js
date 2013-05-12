@@ -56,6 +56,15 @@ define(function(require) {
       }));
     },
 
+    // Returns edges that match src -> dest. Params are node ids.
+    // This performs in n^2 so be careful
+    findEdge : function(src, dest) {
+      return this.get('validEdges').find(function(edge) {
+        return edge.get('src').id === src
+            && edge.get('dest').id === dest;
+      });
+    },
+
     // converts a list of edges to an edge list and a
     // reverse edge list representation
     generateEdgeList : function() {

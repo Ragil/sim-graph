@@ -37,10 +37,20 @@
 .graphView {
   .edge {
     stroke : @color-neutral;
-
-    &.visited {
+  }
+  .edge, .arrowHead {
+    &.traversed {
       stroke : @color-visited;
+      fill : @color-visited;
     }
+
+    &.traversing {
+      stroke : @color-processing;
+      fill : @color-processing;
+    }
+  }
+  .node-text {
+    font-size : 18px;
   }
   .node {
     fill : none;

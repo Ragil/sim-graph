@@ -5,10 +5,14 @@ define(function(require) {
   var Backbone  = require('backbone');
   var Graph     = require('model/Graph');
   var Node      = require('model/Node');
+  var Edge      = require('model/Edge');
   var GraphView = require('view/graph/GraphView');
   var template  = require('text!./BFSView.html');
   var BFSOperation = require('model/BFSOperation');
   var BFSOperationView = require('./BFSOperationView');
+  var OperationPlayerView = require('./OperationPlayerView');
+  var Operation = require('model/Operation');
+  var Operations = require('model/Operations');
 
   var STATE = {
     PLAY : 1,
@@ -25,50 +29,32 @@ define(function(require) {
       options.model.set('height', 600);
       options.model.computeGraphPos();
 
+      this.operationView = OperationPlayerView.get(
+          this.generateOperations());
+
       this.$el.html(template);
       this.$graph = this.$('.graph');
-      this.$log = this.$('.log');
       this.$graph.append(new GraphView({ model : options.model }).$el);
+      this.$log = this.$('.log');
+      this.$log.append(this.operationView.$el);
 
-      this.locks = {};
       this.model.on('change', this.render, this);
       this.render();
     },
 
     render : function() {
-      // stop all plays
-      _.each(this.locks, function(state, lock) {
-        this.locks[lock] = STATE.STOP;
-      }, this);
-
-      this.play();
+      this.operationView.play();
     },
 
-    play : function() {
-      // aquire lock
-      var lock = Math.random().toString();
-      this.locks[lock] = STATE.PLAY;
+    generateOperations : function() {
+      var sequence = _.map(this.getExecSequence(), function(operand) {
+        return new Operation({
+          operand : operand,
+          view : new BFSOperationView({ model : operand })
+        });
+      });
 
-      var sequence = this.getExecSequence();
-      var count = 0;
-      var next = _.bind(function() {
-        var state = this.locks[lock];
-
-        if (state === STATE.PLAY) {
-          var operation = sequence[count++];
-          operation.exec();
-          this.$log.append(new BFSOperationView({ model : operation }).$el);
-
-          if (count < sequence.length) {
-            setTimeout(next, 500);
-          }
-        } else if (state === STATE.STOP) {
-          // clean up
-          delete this.locks[lock];
-        }
-      }, this);
-
-      setTimeout(next, 500);
+      return new Operations(sequence);
     },
 
     getExecSequence : function() {
@@ -99,10 +85,20 @@ define(function(require) {
         // process children
         _.each(edgeList[node.id], function(childId) {
           if (!visited[childId]) {
+
+            // traverse edge
+            var edge = this.model.findEdge(node.id, childId);
+            sequence.push(BFSOperation.edgeOperation(queue, edge,
+                Edge.STATE.TRAVERSING));
+
             var next = this.model.get('nodes').get(childId);
             queue.push(next.id);
             sequence.push(BFSOperation.nodeOperation(queue, next,
                 Node.STATE.PENDING));
+
+            // traversed edge
+            sequence.push(BFSOperation.edgeOperation(queue, edge,
+                Edge.STATE.TRAVERSED));
           }
         }, this);
 

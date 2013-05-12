@@ -6,6 +6,7 @@ define(function(require) {
   var BFSOperation = require('model/BFSOperation');
   var template = require('text!./BFSOperationView.html');
   var Node = require('model/Node');
+  var Edge = require('model/Edge');
 
   var BFSOperationView = Backbone.View.extend({
     className : 'bfsOperationView',
@@ -37,6 +38,17 @@ define(function(require) {
           return 'Process ' + nodeId;
         case Node.STATE.VISITED :
           return 'Mark ' + nodeId + ' complete';
+      }
+      throw new Error('cannot find operation');
+    },
+
+    getEdgeTask : function(operation) {
+      var edgeId = operation.get('operand').id;
+      switch(operation.get('state')) {
+        case Edge.STATE.TRAVERSING:
+          return 'Explore edge ' + edgeId;
+        case Edge.STATE.TRAVERSED:
+          return 'Mark ' + edgeId + ' complete';
       }
       throw new Error('cannot find operation');
     }

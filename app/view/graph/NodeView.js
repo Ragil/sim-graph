@@ -14,18 +14,28 @@ define(function(require) {
         .isOfType(SVGSVGElement);
 
       this.node = options.svg.append('circle');
+      this.text = options.svg.append('text')
+        .text(this.model.id);
 
       this.model.on('change', this.render, this);
       this.render();
     },
 
     render : function() {
+      // reset css
+      this.node.attr('class', '');
+
       this.node
         .classed('node', true)
         .attr('id', this.model.id)
         .attr('cx', this.model.get('left'))
         .attr('cy', this.model.get('top'))
         .attr('r', this.model.get('radius'));
+
+      this.text
+        .classed('node-text', true)
+        .attr('x', this.model.get('left') - 5)
+        .attr('y', this.model.get('top') + 5);
 
       switch(this.model.get('state')) {
         case Node.STATE.PENDING :

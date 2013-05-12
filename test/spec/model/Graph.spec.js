@@ -273,6 +273,17 @@ define(function(require) {
         expectFloat(node2.get('left'), 550);
       });
     });
+
+    describe('findEdge', function() {
+      it('should return the correct edges', function() {
+        var edge = graph.findEdge(rootA.id, nodeB.id);
+        expect(edge.get('src').id).to.be(rootA.id);
+        expect(edge.get('dest').id).to.be(nodeB.id);
+
+        edge = graph.findEdge('invalid id', 'invalid id');
+        expect(edge).not.ok();
+      });
+    });
   });
 
   describe('Graph', function() {
