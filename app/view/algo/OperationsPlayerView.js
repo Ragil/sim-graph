@@ -62,6 +62,7 @@ define(function(require) {
         onClick : _.bind(function() {
           this.replay(this.nextIndex, index + 1);
           this.nextIndex = index + 1;
+          this.logView.highlight(index);
         }, this)
       });
     },
