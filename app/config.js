@@ -14,7 +14,7 @@ require.config({
         text : '../../components/requirejs-text/text',
         mocha : '../../components/mocha/mocha',
         expect : '../../components/expect/expect',
-        sinon : '../../components/sinon/lib/sinon',
+        sinon : '../../lib/sinon-1.7.1',
         check : '../../components/checkjs/lib/check',
         d3 : '../../components/d3/d3',
         'jquery.svg' : '../../components/jquery.svg/jquery.svg',

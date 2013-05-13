@@ -3,7 +3,7 @@ define(function(require) {
   var _ = require('underscore');
   var Backbone = require('backbone');
 
-  var BFSOperation = Backbone.Model.extend({
+  var ExploreOperation = Backbone.Model.extend({
     initialize : function(options) {
       // clone everything
       this.set({
@@ -31,8 +31,8 @@ define(function(require) {
       EDGE : 2
     },
     nodeOperation : function(queue, node, state) {
-      var op = new BFSOperation({
-        type : BFSOperation.TYPE.NODE,
+      var op = new ExploreOperation({
+        type : ExploreOperation.TYPE.NODE,
         queue : queue,
         operand : node,
         state : state,
@@ -48,8 +48,8 @@ define(function(require) {
     },
 
     edgeOperation : function(queue, edge, state) {
-      var op = new BFSOperation({
-        type : BFSOperation.TYPE.EDGE,
+      var op = new ExploreOperation({
+        type : ExploreOperation.TYPE.EDGE,
         queue : queue,
         operand : edge,
         state : state,
@@ -65,5 +65,5 @@ define(function(require) {
     }
   });
 
-  return BFSOperation;
+  return ExploreOperation;
 });

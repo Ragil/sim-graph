@@ -8,7 +8,6 @@
         "mocha": "git://github.com/visionmedia/mocha.git",
         "expect": "git://github.com/LearnBoost/expect.js.git",
         "require": "git://github.com/jrburke/requirejs",
-        "sinon": "git://github.com/cjohansen/Sinon.JS.git",
         "underscore": "git://github.com/documentcloud/underscore.git",
         "requirejs-text": "git://github.com/requirejs/text",
         "bootstrap": "git://github.com/twitter/bootstrap.git",

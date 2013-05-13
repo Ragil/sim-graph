@@ -3,16 +3,16 @@ define(function(require) {
   var _ = require('underscore');
   var check = require('check');
   var Backbone = require('backbone');
-  var BFSOperation = require('model/BFSOperation');
-  var template = require('text!./BFSOperationView.html');
+  var ExploreOperation = require('model/ExploreOperation');
+  var template = require('text!./ExploreOperationView.html');
   var Node = require('model/Node');
   var Edge = require('model/Edge');
 
-  var BFSOperationView = Backbone.View.extend({
-    className : 'bfsOperationView',
-    model : BFSOperation,
+  var ExploreOperationView = Backbone.View.extend({
+    className : 'exploreOperationView',
+    model : ExploreOperation,
     initialize : function(options) {
-      check(options.model).isOfType(BFSOperation);
+      check(options.model).isOfType(ExploreOperation);
 
       this.$el.html(_.template(template, {
         queue : '[' + this.model.get('queue').toString() + ']',
@@ -22,9 +22,9 @@ define(function(require) {
 
     getTask : function(operation) {
       switch (operation.get('type')) {
-        case BFSOperation.TYPE.NODE:
+        case ExploreOperation.TYPE.NODE:
           return this.getNodeTask(operation);
-        case BFSOperation.TYPE.EDGE:
+        case ExploreOperation.TYPE.EDGE:
           return this.getEdgeTask(operation);
       }
     },
@@ -54,5 +54,5 @@ define(function(require) {
     }
   });
 
-  return BFSOperationView;
+  return ExploreOperationView;
 });

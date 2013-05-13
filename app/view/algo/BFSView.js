@@ -8,9 +8,9 @@ define(function(require) {
   var Edge      = require('model/Edge');
   var GraphView = require('view/graph/GraphView');
   var template  = require('text!./BFSView.html');
-  var BFSOperation = require('model/BFSOperation');
-  var BFSOperationView = require('./BFSOperationView');
-  var OperationPlayerView = require('./OperationPlayerView');
+  var ExploreOperation = require('model/ExploreOperation');
+  var ExploreOperationView = require('./ExploreOperationView');
+  var OperationsPlayerView = require('./OperationsPlayerView');
   var Operation = require('model/Operation');
   var Operations = require('model/Operations');
 
@@ -29,7 +29,7 @@ define(function(require) {
       options.model.set('height', 600);
       options.model.computeGraphPos();
 
-      this.operationView = OperationPlayerView.get(
+      this.operationView = OperationsPlayerView.get(
           this.generateOperations());
 
       this.$el.html(template);
@@ -50,7 +50,7 @@ define(function(require) {
       var sequence = _.map(this.getExecSequence(), function(operand) {
         return new Operation({
           operand : operand,
-          view : new BFSOperationView({ model : operand })
+          view : new ExploreOperationView({ model : operand })
         });
       });
 
@@ -64,20 +64,20 @@ define(function(require) {
       var edgeList = this.model.get('edgeList');
       var nodes    = this.model.get('nodes');
 
-      sequence.push(new BFSOperation({
+      sequence.push(new ExploreOperation({
         queue : queue
       }));
 
       // adding root nodes
       this.model.get('rootNodes').each(function(node) {
         queue.push(node.id);
-        sequence.push(BFSOperation.nodeOperation(queue, node,
+        sequence.push(ExploreOperation.nodeOperation(queue, node,
             Node.STATE.PENDING));
       });
 
       while (queue.length > 0) {
         var node = nodes.get(queue.shift());
-        sequence.push(BFSOperation.nodeOperation(queue, node,
+        sequence.push(ExploreOperation.nodeOperation(queue, node,
             Node.STATE.PROCESSING));
 
         visited[node.id] = true;
@@ -88,21 +88,21 @@ define(function(require) {
 
             // traverse edge
             var edge = this.model.findEdge(node.id, childId);
-            sequence.push(BFSOperation.edgeOperation(queue, edge,
+            sequence.push(ExploreOperation.edgeOperation(queue, edge,
                 Edge.STATE.TRAVERSING));
 
             var next = this.model.get('nodes').get(childId);
             queue.push(next.id);
-            sequence.push(BFSOperation.nodeOperation(queue, next,
+            sequence.push(ExploreOperation.nodeOperation(queue, next,
                 Node.STATE.PENDING));
 
             // traversed edge
-            sequence.push(BFSOperation.edgeOperation(queue, edge,
+            sequence.push(ExploreOperation.edgeOperation(queue, edge,
                 Edge.STATE.TRAVERSED));
           }
         }, this);
 
-        sequence.push(BFSOperation.nodeOperation(queue, node,
+        sequence.push(ExploreOperation.nodeOperation(queue, node,
             Node.STATE.VISITED));
       }
 

@@ -8,24 +8,44 @@
 
 @max-width : 750px;
 @max-height : 600px;
+@log-width : 150px;
 
-.bfsView {
-  @log-width : 150px;
+/********    utils    ********/
 
-  .log {
-    @border-width : 1px;
 
-    width : @log-width - @border-width;
-    height : @max-height;
-    border-right : 1px dashed black;
-    display : inline-block;
-    overflow-y : auto;
-    vertical-align : top;
+.clickable {
+  cursor : pointer;
+  cursor : hand;
+}
 
-    .bfsOperationView {
-      border-bottom : 1px dashed black;
+
+/********    views    ********/
+
+
+.log {
+  @border-width : 1px;
+
+  width : @log-width - @border-width;
+  height : @max-height;
+  border-right : 1px dashed black;
+  display : inline-block;
+  overflow-y : auto;
+  vertical-align : top;
+
+  .operationsPlayerView {
+    border-bottom : 1px dashed black;
+    .operationsLoggerView {
+      .entry {
+        &:nth-child(odd) { background-color : grey; }
+        &:nth-child(even) { background-color : white; }
+        &:hover { background-color : yellow; }
+        .selected { background-color : green; }
+      }
     }
   }
+}
+
+.bfsView {
   .graph {
     // must sync this value with graph model
     width : @max-width - @log-width;
