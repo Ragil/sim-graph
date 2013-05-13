@@ -16,11 +16,24 @@ define(function(require) {
       this.mainView = new MainView();
     },
 
+    param : function(name){
+      var results = new RegExp('[\\?&amp;]' + name + '=([^&amp;#]*)')
+          .exec(window.location.href);
+      return results && results.length > 0 ? results[1] : undefined;
+    },
+
     routes : {
       '*actions' : 'all'
     },
 
     all : function() {
+      var algo = this.param('algo');
+      switch(algo) {
+        case 'bfs': this.bfs(); break;
+      }
+    },
+
+    bfs : function() {
       var view = new BFSView({
         model : Graph.randomTree(10)
       });
