@@ -1,13 +1,12 @@
 define(function(require) {
-
-  var BFSView = require('view/algo/BFSView');
+  var BFSAlgo = require('view/algo/BFSAlgo');
   var Node    = require('model/Node');
   var Nodes   = require('model/Nodes');
   var Edge    = require('model/Edge');
   var Edges   = require('model/Edges');
   var Graph   = require('model/Graph');
 
-  describe('BFSView', function() {
+  describe('BFSAlgo', function() {
     var graph = null;
     var nodes = null;
     var edges = null;
@@ -30,7 +29,6 @@ define(function(require) {
       ]);
 
       graph = new Graph({ edges : edges, nodes : nodes });
-      view = new BFSView({ model : graph });
     });
 
     var buildNode = function(id) {
@@ -40,17 +38,10 @@ define(function(require) {
       return new Edge({src : src, dest : dest});
     };
 
-    describe('generateOperations', function() {
-      it('should convert the results from getExecSequence ' +
-          'operation', function() {
-        expect(view.generateOperations().length).to.be(19);
-      });
-    });
-
     describe('getExecSequence', function() {
       var sequence = null;
       beforeEach(function() {
-        sequence = view.getExecSequence();
+        sequence = BFSAlgo.getExecSequence(graph);
       });
 
       var verifyNodeOperation = function(operation, expected) {
@@ -140,5 +131,4 @@ define(function(require) {
       });
     });
   });
-
 });
