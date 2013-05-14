@@ -6,6 +6,8 @@ define(function(require) {
   var MainView  = require('view/MainView');
   var Backbone  = require('backbone');
   var BFSView   = require('view/algo/BFSView');
+  var DFSView   = require('view/algo/DFSView');
+  var DFSAlgo   = require('view/algo/DFSAlgo');
   var Graph     = require('model/Graph');
   var Nodes     = require('model/Nodes');
   var Node      = require('model/Node');
@@ -28,9 +30,20 @@ define(function(require) {
 
     all : function() {
       var algo = this.param('algo');
+      var mode = this.param('mode');
       switch(algo) {
         case 'bfs': this.bfs(); break;
+        case 'dfs': this.dfs(mode); break;
       }
+    },
+
+    dfs : function(mode) {
+      mode = parseInt(mode, 10);
+      var view = new DFSView({
+        model : Graph.randomTree(10),
+        mode : mode
+      });
+      this.mainView.setLayout(view);
     },
 
     bfs : function() {
@@ -38,7 +51,6 @@ define(function(require) {
         model : Graph.randomTree(10)
       });
       this.mainView.setLayout(view);
-      view.render();
     }
   });
 
